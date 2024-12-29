@@ -504,11 +504,30 @@ function sortByAsc(arr) {
  */
 function shuffleChar(str, iterations) {
   let result = str;
+  const seen = new Map();
+  let current = str;
+  let cycleLength = 0;
 
-  for (let i = 0; i < iterations; i += 1) {
+  while (!seen.has(current)) {
+    seen.set(current, cycleLength);
     let evenChars = '';
     let oddChars = '';
+    for (let i = 0; i < current.length; i += 1) {
+      if (i % 2 === 0) {
+        evenChars += current[i];
+      } else {
+        oddChars += current[i];
+      }
+    }
+    current = evenChars + oddChars;
+    cycleLength += 1;
+  }
 
+  const reducedIterations = iterations % cycleLength;
+
+  for (let i = 0; i < reducedIterations; i += 1) {
+    let evenChars = '';
+    let oddChars = '';
     for (let j = 0; j < result.length; j += 1) {
       if (j % 2 === 0) {
         evenChars += result[j];
@@ -516,7 +535,6 @@ function shuffleChar(str, iterations) {
         oddChars += result[j];
       }
     }
-
     result = evenChars + oddChars;
   }
 
